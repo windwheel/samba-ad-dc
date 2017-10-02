@@ -1,0 +1,30 @@
+- name: "Samba - Pre-installation - kill samba|smbd|nmbd|winbindd processes"
+  command: "pkill -f {{ item }}"
+  with_items:
+    - samba
+    - smbd
+    - nmbd
+    - winbindd
+  ignore_errors: yes
+  failed_when: false
+
+- name: "Samba - Pre-installation - Find existing *.tdb and *.ldb files"
+  find:
+    paths: "{{ samba_install_path }}"
+    patterns: '*.tdb,*.ldb'
+    recurse: yes
+  register: samba_db_files
+
+- name: "Samba - Pre-installation - Delete *.tdb and *.ldb files"
+  file:
+    path: "{{ item }}"
+    state: absent 
+  with_items: samba_db_files.files
+
+- name: "Samba - Pre-installation - Delete /etc/krb5.conf"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/krb5.conf"
+    - "{{ samba_install_path }}/private/krb5.conf"

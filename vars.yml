@@ -1,0 +1,59 @@
+samba_ad_dc_hostname: "{{ ansible_hostname }}"
+samba_source_path: /root                 # samba source will be downloaded here and built here
+samba_install_path: /opt/samba           # samba install path
+samba_ad_created_file: "/var/log/.samba_ad_created" # created by the plabyook after domain is provisioned
+samba_version: "4.6.7"
+
+domain_provision_options:
+  realm: "SAMDOM.EXAMPLE.COM"   # Kerberos realm. Also used as the AD DNS domain.
+  domain: "SAMDOM"              # NetBIOS domain name. Recommended to use first part of AD DNS domain name.
+  server_role: "dc"             # Installs the domain controller DC role
+  dns_backend: "SAMBA_INTERNAL"
+  admin_password: Passw0rd      # Domain administrator password. Must meet complexity requirements.
+  use_rfc2307: true             # Enable NIS extensions (store UNIX attributes (uid, gid, home path, etc) in AD)
+
+# Options in this list will be passed to ./configure when building samba.
+samba_configure_flags:
+- with-ads
+- with-winbind
+- with-pam
+- with-quotas
+- with-acl-support
+- with-dnsupdate
+- with-syslog
+- with-regedit
+- with-systemd
+
+# Package Depencies Required to Build Samba:
+# https://wiki.samba.org/index.php/Package_Dependencies_Required_to_Build_Samba
+samba_install_from_source_dependencies:
+- attr
+- bind-utils
+- docbook-style-xsl
+- gcc
+- gdb
+- krb5-workstation
+- libsemanage-python
+- libxslt
+- perl
+- perl-ExtUtils-MakeMaker
+- perl-Parse-Yapp
+- perl-Test-Base
+- pkgconfig
+- policycoreutils-python
+- python-crypto
+- gnutls-devel
+- libattr-devel
+- keyutils-libs-devel
+- libacl-devel
+- libaio-devel
+- libblkid-devel
+- libxml2-devel
+- openldap-devel
+- pam-devel
+- popt-devel
+- python-devel
+- readline-devel
+- zlib-devel
+- systemd-devel
+

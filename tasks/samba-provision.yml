@@ -1,0 +1,10 @@
+- name: Samba - Provision active directory domain controller
+  command: "{{ samba_install_path }}/bin/samba-tool domain provision {{ domain_provision_options.use_rfc2307 | ternary('--use-rfc2307','') }} --realm {{ domain_provision_options.realm }} --domain={{ domain_provision_options.domain }} --server-role={{ domain_provision_options.server_role }}  --dns-backend={{ domain_provision_options.dns_backend }}  --adminpass={{ domain_provision_options.admin_password }}" 
+  args:
+    creates: "{{ samba_install_path }}/private/krb5.conf"
+  register: samba_ad_created
+
+- name: Samba - Mark domain as created
+  file:
+    dest: "{{ samba_ad_created_file }}"
+    state: touch

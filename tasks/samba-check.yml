@@ -1,0 +1,9 @@
+- name: Samba - Check if ad dc already created
+  stat:
+    path: "{{ samba_ad_created_file }}"
+  register: samba_ad_created_check
+
+- name: "Samba - Fail if file exists: {{ samba_ad_created_file }}"
+  fail:
+    msg: "May already be provisioned! File exists: {{ samba_ad_created_file }}"
+  when: samba_ad_created_check.stat.exists

@@ -1,0 +1,36 @@
+- name: Add EPEL repository
+  yum_repository:
+    name: epel
+    description: EPEL Yum repo
+    baseurl: "https://download.fedoraproject.org/pub/epel/$releasever/$basearch"
+    gpgkey: "https://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
+
+- name: Install Samba dependencies.
+  yum: "name={{ item }} state=present"
+  with_items: "{{ samba_install_from_source_dependencies }}"
+
+- name: Download Samba.
+  get_url:
+    url: "https://download.samba.org/pub/samba/stable/samba-{{ samba_version }}.tar.gz"
+    dest: "{{ samba_source_path }}/samba-{{ samba_version }}.tar.gz"
+
+- name: Expand Samba.
+  unarchive: 
+    src: "{{ samba_source_path }}/samba-{{ samba_version }}.tar.gz"
+    dest: "{{ samba_source_path }}"
+    creates: "{{ samba_source_path }}/samba-{{ samba_version }}/README"
+    copy: no
+
+- name: Samba - Configure 
+  shell: "./configure --prefix={{ samba_install_path }} --{{ samba_configure_flags|join(' --') }}"
+  args:
+    chdir: "{{ samba_source_path }}/samba-{{ samba_version }}"
+
+- name: Samba - Make (may take 10+ minutes depending on hardware)
+  make:
+    chdir: "{{ samba_source_path }}/samba-{{ samba_version }}"
+
+- name: Samba - Make Install
+  make:
+    target: install
+    chdir: "{{ samba_source_path }}/samba-{{ samba_version }}"

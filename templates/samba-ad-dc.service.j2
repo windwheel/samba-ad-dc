@@ -1,0 +1,11 @@
+[Unit]
+Description=Samba Active Directory Domain Controller
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+ExecStart={{ samba_install_path }}/sbin/samba -D
+PIDFile={{ samba_install_path }}/var/run/samba.pid
+
+[Install]
+WantedBy=multi-user.target

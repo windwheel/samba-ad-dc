@@ -1,0 +1,37 @@
+- name: Configure DNS - /etc/resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure hosts file - /etc/hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+    
+- name: Samba - Copy Kerberos configuration file
+  copy:
+    src: "{{ samba_install_path }}/private/krb5.conf"
+    dest: "/etc/krb5.conf"
+    remote_src: yes
+
+- name: Systemd - Create samba-ad-dc.service file
+  template:
+    src: samba-ad-dc.service.j2
+    dest: "/etc/systemd/system/samba-ad-dc.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Systemd - Enable and restart samba-ad-dc service
+  systemd:
+    name: samba-ad-dc
+    enabled: true
+    state: restarted
+
+

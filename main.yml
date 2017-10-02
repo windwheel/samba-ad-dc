@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+
+  become: yes
+
+  vars_files:
+  - vars.yml
+
+  tasks:
+  - include: tasks/samba-check.yml
+  - include: tasks/samba-preinstall.yml
+  - include: tasks/samba-install.yml
+  - include: tasks/samba-provision.yml
+  - include: tasks/samba-config.yml
+
+...

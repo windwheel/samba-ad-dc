@@ -2,7 +2,7 @@
 
 This project provisions a Samba 4 active directory domain controller on a Vagrant box running RHEL/CentOS7. 
 
-Presently (September 2017) active directory domain controller functionality is not available with the official packages (e.g. samba-dc). This project builds Samba 4 from source in order to enable that functionality.
+Presently (September 2017) active directory domain controller functionality is not available with the official packages (samba-dc). This project builds Samba 4 from source in order to enable that functionality.
 
 This is not intended for a production environment. I created this primarily for testing purposes and to familiarize myself with Ansible.
 
